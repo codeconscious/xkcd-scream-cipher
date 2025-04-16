@@ -46,7 +46,7 @@ $ dotnet run -- --decode A̰ÁĂĂÅ
 HELLO
 ```
 
-Test encoding and decoding work as expected without issue:
+Test that encoding and decoding return the exact input text that was submitted:
 
 ```sh
 $ dotnet run -- --test "hello" "hi" "how neat\!" 123
