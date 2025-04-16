@@ -73,4 +73,4 @@ let test originalText =
         then "OK"
         else "ERROR"
 
-    $"{result}: {originalText} --> {encodedText} --> {decodedText}"
+    $"%s{result}: %s{originalText} --> %s{encodedText} --> %s{decodedText}"

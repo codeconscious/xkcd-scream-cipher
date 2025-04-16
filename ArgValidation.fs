@@ -24,8 +24,8 @@ let private validateArgCount (args: string array) =
             (String.Join(", ", supportedFlags.Keys))
 
     match args.Length with
-    | 0 -> Error $"No arguments were passed. {instructions}"
-    | 1 -> Error $"Insufficient arguments. {instructions}"
+    | 0 -> Error $"No arguments were passed. %s{instructions}"
+    | 1 -> Error $"Insufficient arguments. %s{instructions}"
     | _ -> Ok args
 
 let private validateFlag flag =
@@ -33,7 +33,7 @@ let private validateFlag flag =
     then Ok supportedFlags[flag]
     else
         let flagSummary = String.Join(", ", supportedFlags.Keys)
-        Error $"Unsupported flag \"%s{flag}\". You must use one of the following: {flagSummary}."
+        Error $"Unsupported flag \"%s{flag}\". You must use one of the following: %s{flagSummary}."
 
 let private validateInputs (inputs: string array) =
     if inputs.Length = 0
