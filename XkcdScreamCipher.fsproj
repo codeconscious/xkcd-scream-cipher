@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>xkcd_scream_cipher</RootNamespace>
+    <!-- Enables warnings for untyped string interpolation -->
+    <WarnOn>3579</WarnOn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Utilities.fs" />
+    <Compile Include="ArgValidation.fs" />
+    <Compile Include="Encoding.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FsToolkit.ErrorHandling" Version="4.18.0" />
+  </ItemGroup>
+
+</Project>
