@@ -2,6 +2,7 @@ module Encoding
 
 open System
 open System.Globalization
+open Utilities
 
 let private encodingPairs =
     [ ("A", "A"); ("B", "Ȧ"); ("C", "A̧"); ("D", "A̠"); ("E", "Á"); ("F", "A̮")
@@ -10,20 +11,20 @@ let private encodingPairs =
       ("S", "Ã"); ("T", "Ā"); ("U", "Ä"); ("V", "À"); ("W", "Ȁ"); ("X", "A̽")
       ("Y", "A̦"); ("Z", "A̷") ]
 
-let encode (unencodedText: string) =
+let encode (unencoded: string) =
     let convert ch =
         let asStr = ch.ToString()
-        let encodingMap = encodingPairs |> Map.ofList
+        let encodingMap = Map.ofList encodingPairs
 
         match encodingMap.TryGetValue asStr with
         | true, found -> found
         | false, _ -> asStr
 
-    unencodedText
+    unencoded
     |> Seq.map convert
     |> String.concat String.Empty
 
-let decode (encodedText: string) =
+let decode (encoded: string) =
     let decodingMap =
         // For detecting some additional characters that might be used instead of the expected ones.
         let extraDecodingPairs = [
@@ -48,16 +49,16 @@ let decode (encodedText: string) =
         ]
 
         encodingPairs
-        |> List.map (fun (x, y) -> y, x) // Ensure encoded chars are first.
+        |> List.map flip // Arrange encoded chars as keys.
         |> List.append extraDecodingPairs
         |> Map.ofList
 
     let convert text =
         match decodingMap.TryGetValue text with
-        | true, found -> found
+        | true, decodedText -> decodedText
         | false, _ -> text
 
-    let stringInfo = StringInfo encodedText
+    let stringInfo = StringInfo encoded
 
     [| 0 .. stringInfo.LengthInTextElements - 1 |]
     |> Array.map (fun i -> stringInfo.SubstringByTextElements(i, 1))
@@ -65,12 +66,12 @@ let decode (encodedText: string) =
     |> String.Concat
 
 // Confirms that provided input is correctly encoded and decoded to its original value.
-let test originalText =
-    let encodedText = encode originalText
-    let decodedText = decode encodedText
+let test (unencodedText: string) =
+    let encoded = encode unencodedText
+    let decoded = decode encoded
     let result =
-        if originalText.Equals(decodedText, StringComparison.InvariantCultureIgnoreCase)
+        if caseInsensitiveEquals unencodedText decoded
         then "OK"
         else "ERROR"
 
-    $"%s{result}: %s{originalText} --> %s{encodedText} --> %s{decodedText}"
+    $"%s{result}: %s{unencodedText} --> %s{encoded} --> %s{decoded}"

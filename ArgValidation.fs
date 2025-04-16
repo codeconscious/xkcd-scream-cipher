@@ -18,17 +18,16 @@ let supportedFlags = Map.ofList [
     ]
 
 let private validateArgCount (args: string array) =
+    let flags = String.Join(", ", supportedFlags.Keys)
     let instructions =
-        sprintf
-            "Supply an operation flag and at least one string to convert.\nSupported flags: %s"
-            (String.Join(", ", supportedFlags.Keys))
+        $"Supply an operation flag and at least one string to convert.\nSupported flags: %s{flags}"
 
     match args.Length with
     | 0 -> Error $"No arguments were passed. %s{instructions}"
     | 1 -> Error $"Insufficient arguments. %s{instructions}"
     | _ -> Ok args
 
-let private validateFlag flag =
+let private validateFlag (flag: string) =
     if supportedFlags.ContainsKey flag
     then Ok supportedFlags[flag]
     else

@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Utilities.fs" />
     <Compile Include="ArgValidation.fs" />
     <Compile Include="Encoding.fs" />
     <Compile Include="Program.fs" />

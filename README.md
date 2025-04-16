@@ -17,9 +17,12 @@ This is an implementation of popular web comic [xkcd](https://xkcd.com/)'s so-ca
 
 ## Usage
 
-```sh
+```
 dotnet run -- [--encode|--decode|--test] input1 optionalInput2
 ```
+
+> [!NOTE]
+> `--` is needed after `dotnet run` to signal that the arguments are for this application and not the `dotnet` command.
 
 ## Errata
 
