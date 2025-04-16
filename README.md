@@ -6,8 +6,8 @@ This is an implementation of popular web comic [xkcd](https://xkcd.com/)'s so-ca
 
 ## Summary
 
-- Replaces all letters in strings with A's containing various diacritics (e.g., "A̋", "A̧", "A̤")
-- Decodes such strings, returning them back to their original letters
+- Replaces all letters in strings with `A`'s containing various diacritics (e.g., `A̋`, `A̧`, `A̤`)
+- Decodes such strings, reverting them back to their original letters
 - Non-supported characters (digits, punctuation, etc.) are not converted and are included as-is
 - Multiple strings can be passed at once
 
@@ -21,8 +21,8 @@ This is an implementation of popular web comic [xkcd](https://xkcd.com/)'s so-ca
 dotnet run -- [--encode|--decode|--test] input1 optionalInput2
 ```
 
-## References and Thanks
+## Errata
 
 - My blog post about this: https://codeconscious.github.io/2025/02/23/xkcd-scream-cipher.html
-- Special thanks to FrostBird347 on GitHub, whose [JavaScript implementation](https://gist.github.com/FrostBird347/e7c017d096b3b50a75f5dcd5b4d08b99) saved
+- Special thanks to FrostBird347, whose [JavaScript implementation](https://gist.github.com/FrostBird347/e7c017d096b3b50a75f5dcd5b4d08b99) saved
 considerable time and trouble gathering the necessary variants of `A`.
