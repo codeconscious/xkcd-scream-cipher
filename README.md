@@ -24,6 +24,38 @@ dotnet run -- [--encode|--decode|--test] input1 optionalInput2
 > [!NOTE]
 > `--` is needed after `dotnet run` to signal that the arguments are for this application and not the `dotnet` command.
 
+### Examples
+
+Encoding text:
+
+```sh
+$ dotnet run -- --encode hello
+A̰ÁĂĂÅ
+```
+
+```sh
+$ dotnet run -- --encode "hello" "this is kinda neat"
+A̰ÁĂĂÅ
+ĀA̰ẢÃ ẢÃ ẠẢÂA̠A ÂÁAĀ
+```
+
+Decoding text:
+
+```sh
+$ dotnet run -- --decode A̰ÁĂĂÅ
+HELLO
+```
+
+Test that encoding and decoding return the exact input text that was submitted:
+
+```sh
+$ dotnet run -- --test "hello" "hi" "how neat\!" 123
+OK: HELLO --> A̰ÁĂĂÅ --> HELLO
+OK: HI --> A̰Ả --> HI
+OK: HOW NEAT! --> A̰ÅȀ ÂÁAĀ! --> HOW NEAT!
+OK: 123 --> 123 --> 123
+```
+
 ## Errata
 
 - My corresponding blog post: [xkcd Scream Cipher](https://codeconscious.github.io/2025/02/23/xkcd-scream-cipher.html)
