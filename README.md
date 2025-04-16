@@ -26,6 +26,5 @@ dotnet run -- [--encode|--decode|--test] input1 optionalInput2
 
 ## Errata
 
-- My blog post about this: https://codeconscious.github.io/2025/02/23/xkcd-scream-cipher.html
-- Special thanks to FrostBird347, whose [JavaScript implementation](https://gist.github.com/FrostBird347/e7c017d096b3b50a75f5dcd5b4d08b99) saved
-considerable time and trouble gathering the necessary variants of `A`.
+- My corresponding blog post: [xkcd Scream Cipher](https://codeconscious.github.io/2025/02/23/xkcd-scream-cipher.html)
+- Special thanks to [FrostBird347](https://github.com/FrostBird347), whose [JavaScript implementation](https://gist.github.com/FrostBird347/e7c017d096b3b50a75f5dcd5b4d08b99) saved considerable time and trouble gathering the necessary variants of `A`.
