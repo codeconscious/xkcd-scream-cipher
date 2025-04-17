@@ -27,26 +27,10 @@ let encode (unencoded: string) =
 let decode (encoded: string) =
     let decodingMap =
         // For detecting some additional characters that might be used instead of the expected ones.
-        let extraDecodingPairs = [
-            "A̸", "Z"
-            "A̅", "T"
-            "Ȧ", "B"
-            "Á", "E"
-            "Ả", "I"
-            "Ạ", "K"
-            "Ă", "L"
-            "Ǎ", "M"
-            "Â", "N"
-            "Å", "O"
-            "Ȃ", "R"
-            "Ã", "S"
-            "Ā", "T"
-            "Ä", "U"
-            "À", "V"
-            "Ȁ", "W"
-            "A̱", "D"
-            "A̲", "D"
-        ]
+        let extraDecodingPairs =
+            [ ("A̸", "Z"); ("A̅", "T"); ("Ȧ", "B"); ("Á", "E"); ("Ả", "I"); ("Ạ", "K")
+              ("Ă", "L"); ("Ǎ", "M"); ("Â", "N"); ("Å", "O"); ("Ȃ", "R"); ("Ã", "S")
+              ("Ā", "T"); ("Ä", "U"); ("À", "V"); ("Ȁ", "W"); ("A̱", "D"); ("A̲", "D") ]
 
         encodingPairs
         |> List.map flip // Arrange encoded chars as keys.
@@ -58,10 +42,13 @@ let decode (encoded: string) =
         | true, decodedText -> decodedText
         | false, _ -> text
 
-    let stringInfo = StringInfo encoded
+    let encodedStringInfo = StringInfo encoded
 
-    [| 0 .. stringInfo.LengthInTextElements - 1 |]
-    |> Array.map (fun i -> stringInfo.SubstringByTextElements(i, 1))
+    // `SubstringByTextElements` is used to properly iterate over composed Unicode characters.
+    let extractCharAt i : string = encodedStringInfo.SubstringByTextElements(i, 1)
+
+    [| 0 .. encodedStringInfo.LengthInTextElements - 1 |]
+    |> Array.map extractCharAt
     |> Array.map convert
     |> String.Concat
 
