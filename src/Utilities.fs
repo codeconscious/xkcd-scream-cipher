@@ -3,10 +3,12 @@ module Utilities
 open System
 
 let flipMap map : Map<'a, 'b> =
-      Map.fold (fun m k v -> m.Add(v, k)) Map.empty map
+    Map.fold (fun acc k v -> Map.add v k acc) Map.empty map
 
-let combineMaps map1 map2 :  Map<'a,'b> =
-    Map.fold (fun acc key value -> Map.add key value acc) map1 map2
+// Merge two maps with the values of the 'primary' one taking precedence.
+let mergeMaps secondary primary : Map<'a, 'b> =
+    Map.fold (fun acc k v -> Map.add k v acc) secondary primary
 
 let caseInsensitiveEquals (x: string) (y: string) : bool =
     x.Equals(y, StringComparison.InvariantCultureIgnoreCase)
+
