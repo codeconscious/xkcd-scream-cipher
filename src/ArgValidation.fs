@@ -27,8 +27,7 @@ let flagSummary =
     let flags =
         supportedFlags
         |> groupByValues
-        |> Seq.map (fun opGroup -> String.Join(", ", snd opGroup))
-        |> String.concat "; "
+        |> toNestedPairs ", " "; "
 
     $"""Supported flags: %s{String.Join(", ", flags)}"""
 

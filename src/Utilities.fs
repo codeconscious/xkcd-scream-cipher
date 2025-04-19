@@ -13,10 +13,17 @@ let merge secondary primary : Map<'a, 'b> =
 let caseInsensitiveEquals (x: string) (y: string) : bool =
     x.Equals(y, StringComparison.InvariantCultureIgnoreCase)
 
-let groupByValues (items: KeyValuePair<'b, 'a> seq) : seq<'a * 'b list> =
+let groupByValues (items: KeyValuePair<'b, 'a> seq) : ('a * 'b seq) seq =
     items
-    |> Seq.map (fun (KeyValue(k, vs)) -> vs, k)
-    |> Seq.groupBy fst
-    |> Seq.map (fun (op, pairs) ->
-        let keys = pairs |> Seq.map snd |> Seq.toList
-        op, keys)
+    |> Seq.groupBy _.Value
+    |> Seq.map (fun (groupValue, groupItems) ->
+        let keys = groupItems |> Seq.map _.Key
+        groupValue, keys)
+
+let toNestedPairs (innerSeparator: string)
+                  (outerSeparator: string)
+                  (items: ('a * 'b seq) seq)
+                  : string =
+    items
+    |> Seq.map (fun (_, v) -> String.Join(innerSeparator, v))
+    |> String.concat outerSeparator
