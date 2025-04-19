@@ -21,8 +21,8 @@ let private decodingMap =
         |> Map.ofList
 
     encodingMap
-    |> flipMap
-    |> mergeMaps extraPairs
+    |> flip
+    |> merge extraPairs
 
 let encode (input: string) =
     let convert input =
@@ -34,7 +34,7 @@ let encode (input: string) =
 
     input
     |> Seq.map convert
-    |> String.concat String.Empty
+    |> String.Concat
 
 let decode (encodedText: string) =
     let convert encoded =
