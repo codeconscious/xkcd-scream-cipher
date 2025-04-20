@@ -6,7 +6,8 @@ open System.Collections.Generic
 let flip (map: Map<'k, 'v>) : Map<'v, 'k> =
     Map.fold
         (fun acc k v -> Map.add v k acc)
-        Map.empty map
+        Map.empty
+        map
 
 let merge secondary primary : Map<'k, 'v> =
     Map.fold
