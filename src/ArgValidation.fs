@@ -27,7 +27,7 @@ let flagSummary =
     let flags =
         supportedFlags
         |> groupByValues
-        |> toNestedPairs ", " "; "
+        |> toNestedPairs ", " "; " // Formatting sample: "--encode, -e; --decode, -d"
 
     $"""Supported flags: %s{String.Join(", ", flags)}."""
 
