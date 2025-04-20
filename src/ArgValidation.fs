@@ -29,7 +29,7 @@ let flagSummary =
         |> groupByValues
         |> toNestedPairs ", " "; "
 
-    $"""Supported flags: %s{String.Join(", ", flags)}"""
+    $"""Supported flags: %s{String.Join(", ", flags)}."""
 
 let private validateArgCount (args: string array) =
     let instructions = $"Supply an operation flag and at least one string to convert.\n%s{flagSummary}"
@@ -42,19 +42,14 @@ let private validateArgCount (args: string array) =
 let private validateFlag (flag: string) =
     if supportedFlags.ContainsKey flag
     then Ok supportedFlags[flag]
-    else Error $"Unsupported flag \"%s{flag}\". %s{flagSummary}."
-
-let private validateInputs (inputs: string array) =
-    if inputs.Length = 0
-    then Error "No inputs to convert were passed."
-    else Ok (inputs |> Array.map _.ToUpperInvariant())
+    else Error $"Unsupported flag \"%s{flag}\". %s{flagSummary}"
 
 let validate (rawArgs: string array) =
     result {
         let! args = validateArgCount rawArgs
         let flag, inputs = args[0], args[1..]
         let! operation = validateFlag flag
-        let! inputs' = validateInputs inputs
-        return { Operation = operation; Inputs = inputs' }
+        return { Operation = operation
+                 Inputs = inputs |> Array.map _.ToUpperInvariant() }
     }
 
