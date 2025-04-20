@@ -13,12 +13,12 @@ This is an implementation of popular web comic [xkcd](https://xkcd.com/)'s so-ca
 
 ## Requirement
 
-.NET 9 runtime
+- .NET 9 runtime
 
 ## Usage
 
 ```
-dotnet run -- [--encode|--decode|--test] input1 optionalInput2
+dotnet run -- [--encode|-e|--decode|-d|--test|-t] input1 optionalInput2
 ```
 
 > [!NOTE]
@@ -34,7 +34,7 @@ A̰ÁĂĂÅ
 ```
 
 ```sh
-$ dotnet run -- --encode "hello" "this is kinda neat"
+$ dotnet run -- -e "hello" "this is kinda neat"
 A̰ÁĂĂÅ
 ĀA̰ẢÃ ẢÃ ẠẢÂA̠A ÂÁAĀ
 ```

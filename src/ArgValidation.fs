@@ -1,6 +1,8 @@
 module ArgValidation
 
 open System
+open System.Collections.Generic
+open Utilities
 open FsToolkit.ErrorHandling
 
 type Operation = Encode | Decode | Test
@@ -9,18 +11,28 @@ type ValidatedArgs =
     { Operation: Operation
       Inputs: string array }
 
-// Abbreviated flags are currently unsupported due to an obscure bug involving "-d".
-// (See https://github.com/dotnet/fsharp/issues/10819 for more.)
-let supportedFlags = Map.ofList [
-        "--encode", Encode
-        "--decode", Decode
-        "--test",   Test
-    ]
+let supportedFlags =
+    // Dictionaries, as currently implemented, preserve the order of added items,
+    // whereas F#'s native Map does not.
+    let flags = Dictionary<string, Operation>()
+    flags.Add("--encode", Encode)
+    flags.Add("-e", Encode)
+    flags.Add("--decode", Decode)
+    flags.Add("-d", Decode)
+    flags.Add("--test", Test)
+    flags.Add("-t", Test)
+    flags
+
+let flagSummary =
+    let flags =
+        supportedFlags
+        |> groupByValues
+        |> toNestedPairs ", " "; " // Formatting sample: "--encode, -e; --decode, -d"
+
+    $"""Supported flags: %s{String.Join(", ", flags)}."""
 
 let private validateArgCount (args: string array) =
-    let flags = String.Join(", ", supportedFlags.Keys)
-    let instructions =
-        $"Supply an operation flag and at least one string to convert.\nSupported flags: %s{flags}"
+    let instructions = $"Supply an operation flag and at least one string to convert.\n%s{flagSummary}"
 
     match args.Length with
     | 0 -> Error $"No arguments were passed. %s{instructions}"
@@ -30,21 +42,14 @@ let private validateArgCount (args: string array) =
 let private validateFlag (flag: string) =
     if supportedFlags.ContainsKey flag
     then Ok supportedFlags[flag]
-    else
-        let flagSummary = String.Join(", ", supportedFlags.Keys)
-        Error $"Unsupported flag \"%s{flag}\". You must use one of the following: %s{flagSummary}."
-
-let private validateInputs (inputs: string array) =
-    if inputs.Length = 0
-    then Error "No inputs to convert were passed."
-    else Ok (inputs |> Array.map _.ToUpperInvariant())
+    else Error $"Unsupported flag \"%s{flag}\". %s{flagSummary}"
 
 let validate (rawArgs: string array) =
     result {
         let! args = validateArgCount rawArgs
         let flag, inputs = args[0], args[1..]
         let! operation = validateFlag flag
-        let! inputs' = validateInputs inputs
-        return { Operation = operation; Inputs = inputs' }
+        return { Operation = operation
+                 Inputs = inputs |> Array.map _.ToUpperInvariant() }
     }
 
