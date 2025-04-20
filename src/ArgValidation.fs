@@ -12,16 +12,16 @@ type ValidatedArgs =
       Inputs: string array }
 
 let supportedFlags =
-    // A dictionary, currently, preserves the order of added items,
+    // Dictionaries, as currently implemented, preserve the order of added items,
     // whereas F#'s native Map does not.
-    let od = Dictionary<string, Operation>()
-    od.Add("--encode", Encode)
-    od.Add("-e", Encode)
-    od.Add("--decode", Decode)
-    od.Add("-d", Decode)
-    od.Add("--test", Test)
-    od.Add("-t", Test)
-    od
+    let flags = Dictionary<string, Operation>()
+    flags.Add("--encode", Encode)
+    flags.Add("-e", Encode)
+    flags.Add("--decode", Decode)
+    flags.Add("-d", Decode)
+    flags.Add("--test", Test)
+    flags.Add("-t", Test)
+    flags
 
 let flagSummary =
     let flags =

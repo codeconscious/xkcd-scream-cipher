@@ -3,27 +3,29 @@ module Utilities
 open System
 open System.Collections.Generic
 
-let flip map : Map<'a, 'b> =
-    Map.fold (fun acc k v -> Map.add v k acc) Map.empty map
+let flip (map: Map<'k, 'v>) : Map<'v, 'k> =
+    Map.fold
+        (fun acc k v -> Map.add v k acc)
+        Map.empty map
 
-// Merge two maps with the values of the 'primary' one taking precedence.
-let merge secondary primary : Map<'a, 'b> =
-    Map.fold (fun acc k v -> Map.add k v acc) secondary primary
+let merge secondary primary : Map<'k, 'v> =
+    Map.fold
+        (fun acc k v -> Map.add k v acc)
+        secondary
+        primary // Takes precedence, overwriting as needed.
 
-let caseInsensitiveEquals (x: string) (y: string) : bool =
-    x.Equals(y, StringComparison.InvariantCultureIgnoreCase)
+let caseInsensitiveEquals (first: string) (second: string) : bool =
+    first.Equals(second, StringComparison.InvariantCultureIgnoreCase)
 
-let groupByValues (items: KeyValuePair<'b, 'a> seq) : ('a * 'b seq) seq =
-    items
+let groupByValues (pairs: KeyValuePair<'k, 'v> seq) : ('v * 'k seq) seq =
+    pairs
     |> Seq.groupBy _.Value
-    |> Seq.map (fun (groupValue, groupItems) ->
-        let keys = groupItems |> Seq.map _.Key
-        groupValue, keys)
+    |> Seq.map (fun (v, pairs) -> v, pairs |> Seq.map _.Key)
 
 let toNestedPairs (innerSeparator: string)
                   (outerSeparator: string)
-                  (items: ('a * 'b seq) seq)
+                  (tuples: ('k * string seq) seq)
                   : string =
-    items
-    |> Seq.map (fun (_, v) -> String.Join(innerSeparator, v))
+    tuples
+    |> Seq.map (fun (_, vs) -> vs |> String.concat innerSeparator)
     |> String.concat outerSeparator
