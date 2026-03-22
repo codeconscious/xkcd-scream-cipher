@@ -10,14 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Utilities.fs" />
     <Compile Include="ArgValidation.fs" />
     <Compile Include="Encoding.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CCFSharpUtils" Version="0.1.41" />
+    <PackageReference Include="CCFSharpUtils" Version="0.1.45" />
     <PackageReference Include="FSharpPlus" Version="1.9.1" />
     <PackageReference Include="FsToolkit.ErrorHandling" Version="5.2.0" />
     <PackageReference Update="FSharp.Core" Version="10.1.201" />

@@ -1,8 +1,8 @@
 module ArgValidation
 
+open CCFSharpUtils.Library
 open System
 open System.Collections.Generic
-open Utilities
 open FsToolkit.ErrorHandling
 
 type Operation = Encode | Decode | Test
@@ -26,8 +26,8 @@ let supportedFlags =
 let flagSummary =
     let flags =
         supportedFlags
-        |> groupByValues
-        |> toNestedPairs ", " "; " // Formatting sample: "--encode, -e; --decode, -d"
+        |> KeyValuePair.groupByValues
+        |> String.tupleValuesToNestedPairs ", " "; " // Formatting sample: "--encode, -e; --decode, -d"
 
     $"""Supported flags: %s{String.Join(", ", flags)}."""
 

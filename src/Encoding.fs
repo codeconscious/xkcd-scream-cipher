@@ -1,8 +1,8 @@
 module Encoding
 
+open CCFSharpUtils.Library
 open System
 open System.Globalization
-open Utilities
 
 let private encodingMap =
     [ ("A", "A"); ("B", "Ȧ"); ("C", "A̧"); ("D", "A̠"); ("E", "Á"); ("F", "A̮")
@@ -21,26 +21,21 @@ let private decodingMap =
         |> Map.ofList
 
     encodingMap
-    |> flip
-    |> merge extraPairs
+    |> Map.flip
+    |> Map.merge extraPairs
 
 let encode (input: string) =
-    let convert input =
-        let inputAsStr = input.ToString()
-
-        match encodingMap.TryGetValue inputAsStr with
-        | true, encoded -> encoded
-        | false, _ -> inputAsStr
+    let convert inputChar =
+        let inputAsStr = inputChar.ToString()
+        encodingMap |> Map.valueOrTarget inputAsStr
 
     input
     |> Seq.map convert
     |> String.Concat
 
 let decode (encodedText: string) =
-    let convert encoded =
-        match decodingMap.TryGetValue encoded with
-        | true, decoded -> decoded
-        | false, _ -> encoded
+    let convert encodedChar =
+        decodingMap |> Map.valueOrTarget encodedChar
 
     let encodedStringInfo = StringInfo encodedText
 
@@ -56,8 +51,9 @@ let decode (encodedText: string) =
 let test (input: string) =
     let encoded = encode input
     let decoded = decode encoded
+
     let result =
-        if caseInsensitiveEquals input decoded
+        if String.equalIgnoreCase input decoded
         then "OK"
         else "ERROR"
 
