@@ -24,37 +24,35 @@ let private decodingMap =
     |> Map.flip
     |> Map.merge extraPairs
 
-let encode (input: string) =
+let encode inputText =
     let convert inputChar =
-        let inputAsStr = inputChar.ToString()
-        encodingMap |> Map.valueOrTarget inputAsStr
+        encodingMap |> Map.valueOrTarget (inputChar.ToString())
 
-    input
+    inputText
     |> Seq.map convert
     |> String.Concat
 
-let decode (encodedText: string) =
+let decode encodedText =
     let convert encodedChar =
         decodingMap |> Map.valueOrTarget encodedChar
 
     let encodedStringInfo = StringInfo encodedText
 
     // `SubstringByTextElements` is used to properly iterate over composed Unicode characters.
-    let extractCharAt i = encodedStringInfo.SubstringByTextElements(i, 1)
+    let extractChar index = encodedStringInfo.SubstringByTextElements(index, 1)
 
     [| 0 .. encodedStringInfo.LengthInTextElements - 1 |]
-    |> Array.map extractCharAt
-    |> Array.map convert
+    |> Array.map (extractChar >> convert)
     |> String.Concat
 
 // Confirms that provided input is correctly encoded and decoded to its original value.
-let test (input: string) =
-    let encoded = encode input
+let test inputText =
+    let encoded = encode inputText
     let decoded = decode encoded
 
     let result =
-        if String.equalIgnoreCase input decoded
+        if String.equalIgnoreCase inputText decoded
         then "OK"
         else "ERROR"
 
-    $"%s{result}: %s{input} --> %s{encoded} --> %s{decoded}"
+    $"%s{result}: %s{inputText} --> %s{encoded} --> %s{decoded}"
