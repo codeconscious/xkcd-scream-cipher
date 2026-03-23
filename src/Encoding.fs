@@ -1,8 +1,8 @@
 module Encoding
 
+open CCFSharpUtils.Library
 open System
 open System.Globalization
-open Utilities
 
 let private encodingMap =
     [ ("A", "A"); ("B", "Ȧ"); ("C", "A̧"); ("D", "A̠"); ("E", "Á"); ("F", "A̮")
@@ -21,44 +21,38 @@ let private decodingMap =
         |> Map.ofList
 
     encodingMap
-    |> flip
-    |> merge extraPairs
+    |> Map.flip
+    |> Map.merge extraPairs
 
-let encode (input: string) =
-    let convert input =
-        let inputAsStr = input.ToString()
+let encode inputText =
+    let convert inputChar =
+        encodingMap |> Map.valueOrTarget (inputChar.ToString())
 
-        match encodingMap.TryGetValue inputAsStr with
-        | true, encoded -> encoded
-        | false, _ -> inputAsStr
-
-    input
+    inputText
     |> Seq.map convert
     |> String.Concat
 
-let decode (encodedText: string) =
-    let convert encoded =
-        match decodingMap.TryGetValue encoded with
-        | true, decoded -> decoded
-        | false, _ -> encoded
-
+let decode encodedText =
     let encodedStringInfo = StringInfo encodedText
 
     // `SubstringByTextElements` is used to properly iterate over composed Unicode characters.
-    let extractCharAt i = encodedStringInfo.SubstringByTextElements(i, 1)
+    let extractChar index = encodedStringInfo.SubstringByTextElements(index, 1)
+
+    let convert encodedChar =
+        decodingMap |> Map.valueOrTarget encodedChar
 
     [| 0 .. encodedStringInfo.LengthInTextElements - 1 |]
-    |> Array.map extractCharAt
-    |> Array.map convert
+    |> Array.map (extractChar >> convert)
     |> String.Concat
 
 // Confirms that provided input is correctly encoded and decoded to its original value.
-let test (input: string) =
-    let encoded = encode input
+let test inputText =
+    let encoded = encode inputText
     let decoded = decode encoded
+
     let result =
-        if caseInsensitiveEquals input decoded
+        if String.equalIgnoreCase inputText decoded
         then "OK"
         else "ERROR"
 
-    $"%s{result}: %s{input} --> %s{encoded} --> %s{decoded}"
+    $"%s{result}: %s{inputText} --> %s{encoded} --> %s{decoded}"
