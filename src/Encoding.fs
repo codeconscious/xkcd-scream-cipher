@@ -33,13 +33,13 @@ let encode inputText =
     |> String.Concat
 
 let decode encodedText =
-    let convert encodedChar =
-        decodingMap |> Map.valueOrTarget encodedChar
-
     let encodedStringInfo = StringInfo encodedText
 
     // `SubstringByTextElements` is used to properly iterate over composed Unicode characters.
     let extractChar index = encodedStringInfo.SubstringByTextElements(index, 1)
+
+    let convert encodedChar =
+        decodingMap |> Map.valueOrTarget encodedChar
 
     [| 0 .. encodedStringInfo.LengthInTextElements - 1 |]
     |> Array.map (extractChar >> convert)
